@@ -1,0 +1,72 @@
+/* multiple font formats are provided here to provide better compression and wider browser support */
+@font-face {
+  font-family: 'GeneralSans-Variable';
+  src:
+    url('/assets/fonts/general-sans/GeneralSans-Variable.woff2') format('woff2'),
+    url('/assets/fonts/general-sans/GeneralSans-Variable.woff') format('woff'),
+    url('/assets/fonts/general-sans/GeneralSans-Variable.ttf')
+      format('truetype');
+  font-weight: 200 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ClashDisplay-Variable';
+  src:
+    url('/assets/fonts/clash-display/ClashDisplay-Variable.woff2')
+      format('woff2'),
+    url('/assets/fonts/clash-display/ClashDisplay-Variable.woff') format('woff'),
+    url('/assets/fonts/clash-display/ClashDisplay-Variable.ttf')
+      format('truetype');
+  font-weight: 200 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'GeneralSans-Variable';
+    --font-decorative: 'ClashDisplay-Variable';
+    --radius: 12px;
+
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+
+    --muted: 0 0% 88%;
+    --muted-foreground: 0 0% 6%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 88%;
+  }
+
+  [data-accent='pink' i] {
+    --accent: 341 76% 62%;
+    --accent-foreground: 0 0% 100%;
+  }
+  [data-accent='blue' i] {
+    --accent: 193 72% 55%;
+    --accent-foreground: 0 0% 100%;
+  }
+  [data-accent='yellow' i] {
+    --accent: 41 76% 51%;
+    --accent-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  :where(*, *::before, *::after) {
+    @apply border-border;
+  }
+  body {
+    @apply min-h-dvh bg-background font-sans text-foreground antialiased;
+  }
+  :where(a, button) {
+    @apply rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/50;
+  }
+}
