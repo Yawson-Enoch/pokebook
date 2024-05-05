@@ -1,0 +1,51 @@
+import { Link, useNavigate } from 'react-router-dom';
+
+import { Button } from '@/components/ui/button';
+import { Icons } from '@/components/common/icons';
+
+export default function Home() {
+  const navigate = useNavigate();
+
+  return (
+    <main className="container grid justify-center gap-y-16 pb-12 pt-[61px] font-sans md:gap-y-[100px] md:pb-24 md:pt-[122px]">
+      <div className="grid justify-items-center text-center md:gap-y-2">
+        <img
+          className="w-[min(100%,_382.51px)] object-contain max-md:aspect-video md:h-[248.25px] md:w-[382.51px] md:object-cover"
+          src={'/assets/images/logo.webp'}
+          alt="Pokebook logo"
+        />
+        <h1 className="font-decorative leading-[59.04px]">
+          Poké <span className="text-accent">book</span>
+        </h1>
+        <p className="max-w-[370px] text-lg leading-[24.3px]">
+          Largest Pokémon index with information about every Pokemon you can
+          think of.
+        </p>
+      </div>
+      <div className="grid justify-items-center gap-y-6">
+        <div className="grid h-[60px] w-[min(calc(100%_-_8px),_536px)] grid-cols-[1fr_auto] rounded-full border pr-2 ring-8 ring-accent md:h-[64px] md:w-[536px]">
+          <input
+            type="text"
+            placeholder="Enter pokemon name"
+            className="w-full rounded-full bg-transparent px-2 text-lg caret-accent outline-none placeholder:text-[#7B7B7B] md:pl-4 md:text-2xl"
+          />
+          <Button
+            type="button"
+            variant={'plain'}
+            size={'icon'}
+            className="size-[46px] self-center rounded-full bg-accent text-accent-foreground shadow-[0_4px_4px_0_hsl(0_0%_0%_/.15)]"
+            onClick={() => navigate('/pokemons')}
+          >
+            <Icons.SearchIcon />
+          </Button>
+        </div>
+        <Link
+          to={'/pokemons'}
+          className="text-center text-lg font-medium leading-[24.3px] text-[#0D131A] underline underline-offset-2 [text-decoration-thickness:_1px]"
+        >
+          View all
+        </Link>
+      </div>
+    </main>
+  );
+}

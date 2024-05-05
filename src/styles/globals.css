@@ -63,9 +63,36 @@
   :where(*, *::before, *::after) {
     @apply border-border;
   }
-  body {
-    @apply min-h-dvh bg-background font-sans text-foreground antialiased;
+
+  ::selection {
+    @apply bg-accent text-accent-foreground;
   }
+
+  body {
+    @apply min-h-dvh bg-background font-decorative text-foreground antialiased bg-cover bg-fixed bg-center bg-no-repeat;
+    background-image: linear-gradient(
+        hsl(0 0% 100% / 0.95),
+        hsl(0 0% 100% / 0.95)
+      ),
+      url('/assets/images/noise.webp');
+  }
+
+  :is(h1, h2, h3, h4) {
+    @apply scroll-m-20 text-foreground font-semibold;
+  }
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+  h2 {
+    @apply text-3xl;
+  }
+  h3 {
+    @apply text-2xl;
+  }
+  h4 {
+    @apply text-xl;
+  }
+
   :where(a, button) {
     @apply rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/50;
   }

@@ -6,7 +6,7 @@ export default function AccentSwitcher() {
   const { accent, setAccent } = useAccent();
 
   return (
-    <div className="container flex min-h-screen items-center justify-center py-12">
+    <div className="container flex min-h-dvh items-center justify-center py-12">
       <ul className="flex items-center justify-center gap-8">
         {accentColors.map((accentColor) => {
           const isActiveAccentColor = accentColor === accent;
