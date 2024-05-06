@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 import { Icons } from '@/components/common/icons';
 
 import AccentSwitcher from './accent-switcher';
+import PokemonCard from './pokemon-card';
 
 export default function Pokemons() {
   return (
-    <div className="grid min-h-dvh grid-rows-[80px_1fr] gap-y-12 md:gap-y-20">
+    <div className="grid min-h-dvh grid-rows-[80px_1fr] gap-y-12">
       <Helmet>
         <title>Pokemons | Pokebook</title>
       </Helmet>
@@ -44,8 +45,12 @@ export default function Pokemons() {
         </div>
       </header>
       <main>
-        <div className="container h-full bg-accent py-8 text-accent-foreground md:py-12">
-          This is the main page
+        <div className="container grid h-full place-content-center py-8 md:py-12">
+          <ul className="inline-grid grid-cols-4 place-items-center gap-x-4 gap-y-12">
+            {new Array(10).fill(0).map((_, index) => (
+              <PokemonCard key={index} />
+            ))}
+          </ul>
         </div>
       </main>
     </div>
