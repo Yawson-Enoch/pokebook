@@ -7,11 +7,11 @@ export default function PokemonCard() {
       className="relative grid cursor-pointer justify-items-center gap-y-8 rounded-[20px] bg-background p-2.5 shadow-[0_4px_40px_0_hsl(0_0%_0%_/_.06)]"
       onClick={() => console.log('open drawer')}
     >
-      <div className="grid justify-items-center gap-y-2">
+      <div className="grid w-full justify-items-center gap-y-2">
         {/* image */}
-        <div className="flex h-[148px] w-[268px] items-center justify-center rounded-[15px] bg-[#F1F1F1]">
+        <div className="flex h-[125.8px] w-full items-center justify-center rounded-[15px] bg-[#F1F1F1] md:h-[148px]">
           <img
-            className="relative -top-11 size-full object-contain"
+            className="relative -top-12 h-[162.35px] w-[161.09px] object-contain md:h-[191px] md:w-[189.9px]"
             src={'/assets/images/logo.webp'}
             /* add pokemon name here */
             alt="Pokebook logo"

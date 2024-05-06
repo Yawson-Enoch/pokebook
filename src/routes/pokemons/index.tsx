@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Icons } from '@/components/common/icons';
 
 import AccentSwitcher from './accent-switcher';
+import Pagination from './pagination';
 import PokemonCard from './pokemon-card';
 
 export default function Pokemons() {
@@ -45,12 +46,16 @@ export default function Pokemons() {
         </div>
       </header>
       <main>
-        <div className="container grid h-full place-content-center py-8 md:py-12">
-          <ul className="inline-grid grid-cols-4 place-items-center gap-x-4 gap-y-12">
-            {new Array(10).fill(0).map((_, index) => (
-              <PokemonCard key={index} />
-            ))}
-          </ul>
+        <div className="container grid h-full max-w-[1300px] py-8 pb-16 md:py-12 md:pb-24">
+          <div className="grid gap-y-16">
+            <ul className="grid grid-cols-[repeat(auto-fill,_minmax(min(288px,_100%),_1fr))] gap-x-4 gap-y-12">
+              {new Array(10).fill(0).map((_, index) => (
+                <PokemonCard key={index} />
+              ))}
+            </ul>
+
+            <Pagination />
+          </div>
         </div>
       </main>
     </div>
