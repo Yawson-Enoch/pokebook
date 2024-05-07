@@ -32,7 +32,7 @@ export default function AccentSwitcher() {
         <DialogTrigger asChild>
           <button className="aspect-square size-7 rounded-full bg-accent outline outline-1 outline-offset-4 outline-[#868686] focus-visible:ring-4 md:size-[34.81px]"></button>
         </DialogTrigger>
-        <DialogContent className="h-[263px] w-[427px] overflow-hidden rounded-[32px] bg-[#EBEBEB] p-0">
+        <DialogContent className="h-[263px] w-[427px] overflow-hidden rounded-[32px] bg-[#EBEBEB] p-0 lg:duration-300 lg:data-[state=closed]:slide-out-to-bottom-12 lg:data-[state=open]:slide-in-from-bottom-12">
           <DialogHeader className="flex h-[57px] flex-row items-center justify-center bg-background shadow-[0_4px_4px_0_hsl(0_0%_0%_/_.03)] sm:text-center">
             <DialogTitle>Choose Theme</DialogTitle>
           </DialogHeader>
