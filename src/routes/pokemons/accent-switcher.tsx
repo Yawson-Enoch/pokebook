@@ -74,7 +74,7 @@ export default function AccentSwitcher() {
       <DrawerTrigger asChild>
         <button className="aspect-square size-7 rounded-full bg-accent outline outline-1 outline-offset-4 outline-[#868686] focus-visible:ring-4 md:size-[34.81px]"></button>
       </DrawerTrigger>
-      <DrawerContent className="h-[263px] overflow-hidden rounded-t-[32px] bg-[#EBEBEB] p-0">
+      <DrawerContent className="inset-x-0 bottom-0 mt-24 flex h-[263px] flex-col overflow-hidden rounded-t-[32px] bg-[#EBEBEB]">
         <DrawerHeader className="bg-background shadow-[0_4px_4px_0_hsl(0_0%_0%_/_.03)]">
           <div className="mx-auto mb-auto mt-3 h-1.5 w-[100px] rounded-full bg-muted" />
           <DrawerTitle>Choose Theme</DrawerTitle>
