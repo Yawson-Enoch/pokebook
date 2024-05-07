@@ -40,21 +40,23 @@ export default function PokemonCard() {
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
-        <li className="relative grid cursor-pointer justify-items-center gap-y-8 rounded-[20px] bg-background p-2.5 shadow-[0_4px_40px_0_hsl(0_0%_0%_/_.06)]">
-          <div className="grid w-full justify-items-center gap-y-2">
+        <li className="group relative">
+          <div className="grid w-full cursor-pointer justify-items-center gap-y-2 rounded-t-[20px] bg-background pt-2.5">
             {/* image */}
-            <div className="flex h-[125.8px] w-full items-center justify-center rounded-[15px] bg-[#F1F1F1] md:h-[148px]">
-              <img
-                className="relative -top-12 h-[162.35px] w-[161.09px] object-contain md:h-[191px] md:w-[189.9px]"
-                src={'/assets/images/logo.webp'}
-                /* add pokemon name here */
-                alt="Pokebook logo"
-              />
+            <div className="size-full px-2.5">
+              <div className="flex h-[125.8px] w-full items-center justify-center rounded-[15px] bg-[#F1F1F1] px-2.5 md:h-[148px]">
+                <img
+                  className="relative -top-12 h-[162.35px] w-[161.09px] object-contain md:h-[191px] md:w-[189.9px]"
+                  src={'/assets/images/logo.webp'}
+                  /* add pokemon name here */
+                  alt="Pokebook logo"
+                />
+              </div>
             </div>
             {/* title */}
-            <p className="text-2xl font-medium">beedrill</p>
+            <p className="px-2.5 text-2xl font-medium">beedrill</p>
             {/* types */}
-            <ul className="flex items-center justify-center gap-x-2.5">
+            <ul className="relative z-20 flex w-full items-center justify-center gap-x-2.5 bg-background px-2.5">
               {['normal', 'poison'].map((title) => (
                 <li
                   key={title}
@@ -67,10 +69,12 @@ export default function PokemonCard() {
             </ul>
           </div>
 
-          <Button className="flex w-full justify-between px-[20px] py-[12px]">
-            <span>View Pokemon</span>
-            <Icons.EyeIcon />
-          </Button>
+          <div className="absolute inset-x-0 z-10 flex h-[44px] w-full -translate-y-3 cursor-pointer items-end rounded-b-[20px] bg-background px-2.5 pb-2.5 shadow-[0_4px_40px_0_hsl(0_0%_0%_/_.06)] transition-[height] duration-300 ease-in-out group-hover:h-[90px]">
+            <Button className="relative hidden w-full justify-between px-[20px] py-[12px] group-hover:flex">
+              <span>View Pokemon</span>
+              <Icons.EyeIcon />
+            </Button>
+          </div>
         </li>
       </DrawerTrigger>
       <DrawerContent className="inset-y-0 right-0 w-[min(100vw,_659px)] outline-0">

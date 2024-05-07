@@ -48,7 +48,7 @@ export default function Pokemons() {
       <main>
         <div className="container grid h-full max-w-[1300px] py-8 pb-16 md:py-12 md:pb-24">
           <div className="grid gap-y-16">
-            <ul className="grid grid-cols-[repeat(auto-fill,_minmax(min(288px,_100%),_1fr))] gap-x-4 gap-y-12">
+            <ul className="grid grid-cols-[repeat(auto-fill,_minmax(min(288px,_100%),_1fr))] gap-x-4 gap-y-20">
               {new Array(10).fill(0).map((_, index) => (
                 <PokemonCard key={index} />
               ))}
