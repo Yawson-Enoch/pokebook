@@ -26,7 +26,7 @@ export default function Pokemons() {
               src={'/assets/images/logo.webp'}
               alt="Pokebook logo"
             />
-            <h1 className="leading-[29.52px]] font-decorative text-2xl max-lg:hidden">
+            <h1 className="font-decorative text-2xl max-lg:hidden">
               Poke<span className="text-accent">book</span>
             </h1>
           </Link>
@@ -38,7 +38,7 @@ export default function Pokemons() {
             <input
               type="text"
               placeholder="Enter pokemon name"
-              className="w-full rounded-full bg-transparent px-2 font-sans leading-[24.3px] caret-accent outline-none placeholder:text-[#7B7B7B] md:px-3 md:text-lg"
+              className="w-full rounded-full bg-transparent px-2 font-sans caret-accent outline-none placeholder:text-[#7B7B7B] md:px-3 md:text-lg"
             />
           </div>
           <AccentSwitcher />

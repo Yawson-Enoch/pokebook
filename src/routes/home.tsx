@@ -25,16 +25,16 @@ export default function Home() {
 
   return (
     <main className="container grid justify-center gap-y-16 pb-12 pt-[61px] font-sans md:gap-y-[100px] md:pb-24 md:pt-[122px]">
-      <div className="grid justify-items-center text-center md:gap-y-2">
+      <div className="grid justify-items-center gap-y-1 text-center md:gap-y-2.5">
         <img
           className="w-[min(100%,_382.51px)] object-contain max-md:aspect-video md:h-[248.25px] md:w-[382.51px] md:object-cover"
           src={'/assets/images/logo.webp'}
           alt="Pokebook logo"
         />
-        <h1 className="font-decorative leading-[59.04px]">
+        <h1 className="font-decorative">
           Poké <span className="text-accent">book</span>
         </h1>
-        <p className="max-w-[370px] text-lg leading-[24.3px]">
+        <p className="max-w-[370px] text-lg">
           Largest Pokémon index with information about every Pokemon you can
           think of.
         </p>
@@ -58,7 +58,7 @@ export default function Home() {
         </div>
         <Link
           to={'/pokemons'}
-          className="text-center text-lg font-medium leading-[24.3px] text-[#0D131A] underline underline-offset-2 [text-decoration-thickness:_1px]"
+          className="text-center text-lg font-medium text-[#0D131A] underline underline-offset-2 [text-decoration-thickness:_1px]"
         >
           View all
         </Link>
