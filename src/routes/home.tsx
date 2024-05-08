@@ -1,9 +1,26 @@
+import * as React from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { getPokemons, pokemonsQueryKey } from '@/hooks/api/use-pokemon';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/common/icons';
 
 export default function Home() {
+  const queryClient = useQueryClient();
+
+  /* prefetch pokemons 
+  - this starts the fetching of the pokemons on the home page and stores it in the cache
+  - `/pokemons` page uses the cached data if it finishes. Else it continues the fetch
+  */
+  React.useEffect(() => {
+    queryClient.prefetchQuery({
+      queryKey: pokemonsQueryKey,
+      queryFn: getPokemons,
+      staleTime: Infinity,
+    });
+  }, [queryClient]);
+
   const navigate = useNavigate();
 
   return (

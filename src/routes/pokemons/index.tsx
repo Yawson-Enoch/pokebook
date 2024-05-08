@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom';
 import { Icons } from '@/components/common/icons';
 
 import AccentSwitcher from './accent-switcher';
-import Pagination from './pagination';
-import PokemonCard from './pokemon-card';
+import PokemonsList from './pokemons-list';
 
 export default function Pokemons() {
   return (
-    <div className="grid min-h-dvh grid-rows-[80px_1fr] gap-y-12">
+    <div className="grid min-h-dvh grid-rows-[80px_1fr] gap-y-16">
       <Helmet>
         <title>Pokemons | Pokebook</title>
       </Helmet>
@@ -28,7 +27,7 @@ export default function Pokemons() {
               alt="Pokebook logo"
             />
             <h1 className="leading-[29.52px]] font-decorative text-2xl max-lg:hidden">
-              Poké <span className="text-accent">book</span>
+              Poke<span className="text-accent">book</span>
             </h1>
           </Link>
           {/* search box */}
@@ -45,19 +44,7 @@ export default function Pokemons() {
           <AccentSwitcher />
         </div>
       </header>
-      <main>
-        <div className="container grid h-full max-w-[1300px] py-8 pb-16 md:py-12 md:pb-24">
-          <div className="grid gap-y-16">
-            <ul className="grid grid-cols-[repeat(auto-fill,_minmax(min(288px,_100%),_1fr))] gap-x-4 gap-y-20">
-              {new Array(10).fill(0).map((_, index) => (
-                <PokemonCard key={index} />
-              ))}
-            </ul>
-
-            <Pagination />
-          </div>
-        </div>
-      </main>
+      <PokemonsList />
     </div>
   );
 }
