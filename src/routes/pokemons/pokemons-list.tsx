@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -11,6 +10,7 @@ import {
   useGetPokemons,
   useGetPokemonsDetails,
 } from '@/hooks/api/use-pokemon';
+import { useFilter } from '@/hooks/use-query-state';
 import {
   Select,
   SelectContent,
@@ -25,12 +25,8 @@ import PokemonCard from './pokemon-card';
 const perPageValues = [8, 12, 16, 24];
 
 export default function PokemonsList() {
-  const [pageOffset, setPageOffset] = React.useState(0);
-  const [pokemonsPerPage, setPokemonsPerPage] = React.useState(
-    perPageValues[0] || 8,
-  );
-  const [page, setPage] = React.useState(1);
-  const [pokemonType, setPokemonType] = React.useState('all');
+  /* manage state with query params - make filter sharable and maintain filter state on page refresh */
+  const [filter, setFilter] = useFilter();
 
   const { data: pokemonsUrls } = useGetPokemons();
   const pokemonsDetails = useGetPokemonsDetails();
@@ -44,7 +40,7 @@ export default function PokemonsList() {
     return (
       <main>
         <div className="container grid h-full max-w-[1300px] gap-y-24 py-8 pb-16 md:py-12 md:pb-24">
-          <p className="text-center text-lg font-medium md:text-2xl">
+          <p className="text-center font-sans text-xl font-medium md:text-2xl">
             Loading pokemons...
           </p>
         </div>
@@ -68,32 +64,37 @@ export default function PokemonsList() {
 
   /* filter pokemons by `pokemonType` */
   const pokemonsByType =
-    pokemonType === 'all'
+    filter.pokemonType === 'all'
       ? pokemonsDetailsData
       : pokemonsDetailsData.filter((pokemon) =>
-          pokemon.types.some((type) => type.type.name === pokemonType),
+          pokemon.types.some((type) => type.type.name === filter.pokemonType),
         );
 
+  /* filter`pokemonType` by search result 
+    - only filtering by `name` here
+  */
+  const pokemonsBySearch = pokemonsByType.filter((pokemon) =>
+    pokemon.name.toLowerCase().includes(filter.s.toLowerCase()),
+  );
+
   /* pokemons data pagination */
-  const endOffset = pageOffset + pokemonsPerPage;
-  const currentPokemons = pokemonsByType.slice(pageOffset, endOffset);
-  const pageCount = Math.ceil(pokemonsByType.length / pokemonsPerPage);
+  const endOffset = filter.pageOffset + filter.perPage;
+  const currentPokemons = pokemonsBySearch.slice(filter.pageOffset, endOffset);
+  const pageCount = Math.ceil(pokemonsBySearch.length / filter.perPage);
 
   const handlePageClick = async ({ selected }: { selected: number }) => {
     if (pageCount > 1) {
-      const newOffset = (selected * pokemonsPerPage) % pokemonsByType.length;
-      window.scrollTo(0, 0);
-      setPage(selected + 1);
-      setPageOffset(newOffset);
+      const newOffset = (selected * filter.perPage) % pokemonsBySearch.length;
+      setFilter({ page: selected + 1, pageOffset: newOffset });
     }
   };
 
-  if (isPokemonsDetailsComplete && pokemonsDetailsData.length === 0) {
+  if (pageCount === 0) {
     return (
       <main>
         <div className="container grid h-full max-w-[1300px] gap-y-24 py-8 pb-16 md:py-12 md:pb-24">
-          <p className="text-center text-lg font-medium md:text-2xl">
-            No pokemons available
+          <p className="text-center font-sans font-medium md:text-lg">
+            Oops! No matches. Adjust your filters or modify your search query.
           </p>
         </div>
       </main>
@@ -114,7 +115,7 @@ export default function PokemonsList() {
           <div className="flex flex-wrap gap-x-4 gap-y-6 max-md:justify-center md:items-center md:justify-between">
             <ReactPaginate
               pageCount={pageCount}
-              forcePage={page - 1}
+              forcePage={filter.page - 1}
               pageRangeDisplayed={4}
               marginPagesDisplayed={1}
               renderOnZeroPageCount={null}
@@ -135,12 +136,13 @@ export default function PokemonsList() {
             <div className="flex flex-wrap gap-x-4 gap-y-6 max-md:justify-center md:items-center">
               {/* select pokemon type */}
               <Select
-                value={pokemonType}
+                value={filter.pokemonType}
                 onValueChange={(value) => {
-                  window.scrollTo(0, 0);
-                  setPage(1);
-                  setPageOffset(0);
-                  setPokemonType(value);
+                  setFilter({
+                    page: undefined,
+                    pageOffset: undefined,
+                    pokemonType: value,
+                  });
                 }}
               >
                 <SelectTrigger className="w-[133px]">
@@ -165,12 +167,13 @@ export default function PokemonsList() {
 
               {/* select pokemons per page */}
               <Select
-                value={pokemonsPerPage.toString()}
+                value={filter.perPage.toString()}
                 onValueChange={(value) => {
-                  window.scrollTo(0, 0);
-                  setPage(1);
-                  setPageOffset(0);
-                  setPokemonsPerPage(Number(value));
+                  setFilter({
+                    page: undefined,
+                    pageOffset: undefined,
+                    perPage: Number(value),
+                  });
                 }}
               >
                 <SelectTrigger className="w-[85px]">

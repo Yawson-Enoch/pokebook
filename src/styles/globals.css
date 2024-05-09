@@ -96,4 +96,8 @@
   :where(a, button) {
     @apply rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/50;
   }
+
+  input[type='search']::-webkit-search-cancel-button {
+    display: none;
+  }
 }

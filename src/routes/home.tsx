@@ -40,22 +40,34 @@ export default function Home() {
         </p>
       </div>
       <div className="grid justify-items-center gap-y-6">
-        <div className="grid h-[60px] w-[min(calc(100%_-_8px),_536px)] grid-cols-[1fr_auto] rounded-full border pr-2 ring-8 ring-accent md:h-[64px] md:w-[536px]">
+        <form
+          className="grid h-[60px] w-[min(calc(100%_-_8px),_536px)] grid-cols-[1fr_auto] rounded-full border pr-2 ring-8 ring-accent md:h-[64px] md:w-[536px]"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const searchValue = formData.get('search') as string;
+            navigate(
+              searchValue.trim() === ''
+                ? '/pokemons'
+                : `/pokemons?s=${searchValue}`,
+            );
+          }}
+        >
           <input
-            type="text"
+            type="search"
+            name="search"
             placeholder="Enter pokemon name"
             className="w-full rounded-full bg-transparent px-2 text-lg caret-accent outline-none placeholder:text-[#7B7B7B] md:pl-4 md:text-2xl"
           />
           <Button
-            type="button"
+            type="submit"
             variant={'plain'}
             size={'icon'}
             className="size-[46px] self-center rounded-full bg-accent text-accent-foreground shadow-[0_4px_4px_0_hsl(0_0%_0%_/.15)]"
-            onClick={() => navigate('/pokemons')}
           >
             <Icons.SearchIcon />
           </Button>
-        </div>
+        </form>
         <Link
           to={'/pokemons'}
           className="text-center text-lg font-medium text-[#0D131A] underline underline-offset-2 [text-decoration-thickness:_1px]"

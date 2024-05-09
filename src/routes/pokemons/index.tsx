@@ -1,10 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 
-import { Icons } from '@/components/common/icons';
-
 import AccentSwitcher from './accent-switcher';
 import PokemonsList from './pokemons-list';
+import Search from './search';
 
 export default function Pokemons() {
   return (
@@ -18,7 +17,7 @@ export default function Pokemons() {
           backgroundImage: `linear-gradient(hsl(0 0% 100% / .97), hsl(0 0% 100% / .97)), url('/assets/images/noise.webp')`,
         }}
       >
-        <div className="container flex h-full items-center justify-between gap-x-8">
+        <div className="container flex h-full items-center justify-between gap-x-5 md:gap-x-8">
           {/* logo */}
           <Link to={'/'} className="flex items-center gap-x-3">
             <img
@@ -30,17 +29,7 @@ export default function Pokemons() {
               Poke<span className="text-accent">book</span>
             </h1>
           </Link>
-          {/* search box */}
-          <div className="grid h-[40px] w-[min(100%,_440px)] grid-cols-[auto_1fr] rounded-full border pl-2 shadow-[0_4px_0_0_hsl(0_0%_0%_/.05)] md:h-[48px] md:pl-6">
-            <div className="flex items-center justify-center self-center text-[#DFDFDF]">
-              <Icons.SearchIcon className="size-[17.49px]" />
-            </div>
-            <input
-              type="text"
-              placeholder="Enter pokemon name"
-              className="w-full rounded-full bg-transparent px-2 font-sans caret-accent outline-none placeholder:text-[#7B7B7B] md:px-3 md:text-lg"
-            />
-          </div>
+          <Search />
           <AccentSwitcher />
         </div>
       </header>
