@@ -30,107 +30,171 @@ export default function PokemonsList() {
     perPageValues[0] || 8,
   );
   const [page, setPage] = React.useState(1);
+  const [pokemonType, setPokemonType] = React.useState('all');
 
-  const { isSuccess } = useGetPokemons();
+  const { data: pokemonsUrls } = useGetPokemons();
   const pokemonsDetails = useGetPokemonsDetails();
 
   /* check if some query has errored out or is loading */
   const isPokemonsDetailsComplete = pokemonsDetails.some(
     (query) => query.data === undefined,
   );
-  /* `pokemonsDetails` returns array of all the queries, mapping over it to only get the `data` fields  */
+
+  if (!pokemonsUrls || isPokemonsDetailsComplete) {
+    return (
+      <main>
+        <div className="container grid h-full max-w-[1300px] gap-y-24 py-8 pb-16 md:py-12 md:pb-24">
+          <p className="text-center text-lg font-medium md:text-2xl">
+            Loading pokemons...
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  /* `pokemonsDetails` returns array of all the queries, mapping over it to only get the `data` fields  
+  - returns an empty array if `useGetPokemons` data in undefined
+  - running after `useGetPokemons` and all the queries for `useGetPokemonsDetails` are successful ensures that all the data is available 
+  */
   const pokemonsDetailsData = pokemonsDetails.map(
     (pokemon) => pokemon.data as PokemonsDetails,
   );
 
+  /* get unique types from all the fetched pokemons */
+  const allTypes = pokemonsDetailsData.flatMap((pokemon) =>
+    pokemon.types.map((type) => type.type.name),
+  );
+  const uniqueTypes = ['all', ...new Set(allTypes)]; // get unique types
+
+  /* filter pokemons by `pokemonType` */
+  const pokemonsByType =
+    pokemonType === 'all'
+      ? pokemonsDetailsData
+      : pokemonsDetailsData.filter((pokemon) =>
+          pokemon.types.some((type) => type.type.name === pokemonType),
+        );
+
   /* pokemons data pagination */
   const endOffset = pageOffset + pokemonsPerPage;
-  const currentPokemons = pokemonsDetailsData.slice(pageOffset, endOffset);
-  const pageCount = Math.ceil(pokemonsDetailsData.length / pokemonsPerPage);
+  const currentPokemons = pokemonsByType.slice(pageOffset, endOffset);
+  const pageCount = Math.ceil(pokemonsByType.length / pokemonsPerPage);
 
   const handlePageClick = async ({ selected }: { selected: number }) => {
     if (pageCount > 1) {
-      const newOffset =
-        (selected * pokemonsPerPage) % pokemonsDetailsData.length;
+      const newOffset = (selected * pokemonsPerPage) % pokemonsByType.length;
       window.scrollTo(0, 0);
       setPage(selected + 1);
       setPageOffset(newOffset);
     }
   };
 
+  if (isPokemonsDetailsComplete && pokemonsDetailsData.length === 0) {
+    return (
+      <main>
+        <div className="container grid h-full max-w-[1300px] gap-y-24 py-8 pb-16 md:py-12 md:pb-24">
+          <p className="text-center text-lg font-medium md:text-2xl">
+            No pokemons available
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main>
       <div className="container grid h-full max-w-[1300px] gap-y-24 py-8 pb-16 md:py-12 md:pb-24">
-        {isPokemonsDetailsComplete ? (
-          <p className="text-center text-2xl font-medium">
-            Loading pokemons...
-          </p>
-        ) : isSuccess && pokemonsDetails.length === 0 ? (
-          <p className="text-center text-2xl font-medium">
-            No pokemons available
-          </p>
-        ) : (
-          <React.Fragment>
-            {/* list of pokemons */}
-            <ul className="grid grid-cols-[repeat(auto-fill,_minmax(min(288px,_100%),_1fr))] gap-x-4 gap-y-28">
-              {currentPokemons.map((currentPokemon) => (
-                <PokemonCard key={currentPokemon.id} pokemon={currentPokemon} />
-              ))}
-            </ul>
-            {/* pagination elements */}
-            {pageCount >= 1 ? (
-              <div className="flex flex-wrap gap-x-4 gap-y-6 max-md:justify-center md:items-center md:justify-between">
-                <ReactPaginate
-                  pageCount={pageCount}
-                  forcePage={page - 1}
-                  pageRangeDisplayed={4}
-                  marginPagesDisplayed={1}
-                  renderOnZeroPageCount={null}
-                  onPageChange={handlePageClick}
-                  containerClassName="flex w-fit flex-wrap items-center gap-0.5 font-medium text-foreground md:gap-2 md:text-lg"
-                  pageClassName="block"
-                  pageLinkClassName="flex aspect-square size-8 items-center justify-center rounded-sm md:size-[40px] md:rounded-[8px] md:bg-muted"
-                  activeLinkClassName="border border-transparent text-accent max-md:border-accent md:!bg-accent md:text-accent-foreground"
-                  disabledClassName="pointer-events-none text-muted-foreground/30"
-                  previousLabel={
-                    <ChevronLeftIcon className="size-4 md:size-6" />
-                  }
-                  previousLinkClassName="flex aspect-square size-8 items-center justify-center rounded-sm md:size-[40px] md:rounded-[8px] md:bg-muted"
-                  breakLabel={
-                    <DotsHorizontalIcon className="size-4 md:size-6" />
-                  }
-                  breakClassName="block self-end"
-                  nextLabel={<ChevronRightIcon className="size-4 md:size-6" />}
-                  nextLinkClassName="flex aspect-square size-8 items-center justify-center rounded-sm md:size-[40px] md:rounded-[8px] md:bg-muted"
-                />
+        {/* list of pokemons */}
+        <ul className="grid grid-cols-[repeat(auto-fill,_minmax(min(288px,_100%),_1fr))] gap-x-4 gap-y-28">
+          {currentPokemons.map((currentPokemon) => (
+            <PokemonCard key={currentPokemon.id} pokemon={currentPokemon} />
+          ))}
+        </ul>
+        {/* pagination elements */}
+        {pageCount >= 1 ? (
+          <div className="flex flex-wrap gap-x-4 gap-y-6 max-md:justify-center md:items-center md:justify-between">
+            <ReactPaginate
+              pageCount={pageCount}
+              forcePage={page - 1}
+              pageRangeDisplayed={4}
+              marginPagesDisplayed={1}
+              renderOnZeroPageCount={null}
+              onPageChange={handlePageClick}
+              containerClassName="flex w-fit flex-wrap items-center gap-0.5 font-medium text-foreground md:gap-2 md:text-lg"
+              pageClassName="block"
+              pageLinkClassName="flex aspect-square size-8 items-center justify-center rounded-sm md:size-[40px] md:rounded-[8px] md:bg-muted"
+              activeLinkClassName="border border-transparent text-accent max-md:border-accent md:!bg-accent md:text-accent-foreground"
+              disabledClassName="pointer-events-none text-muted-foreground/30"
+              previousLabel={<ChevronLeftIcon className="size-4 md:size-6" />}
+              previousLinkClassName="flex aspect-square size-8 items-center justify-center rounded-sm md:size-[40px] md:rounded-[8px] md:bg-muted"
+              breakLabel={<DotsHorizontalIcon className="size-4 md:size-6" />}
+              breakClassName="block self-end"
+              nextLabel={<ChevronRightIcon className="size-4 md:size-6" />}
+              nextLinkClassName="flex aspect-square size-8 items-center justify-center rounded-sm md:size-[40px] md:rounded-[8px] md:bg-muted"
+            />
 
-                {/* select pokemons per page */}
-                <Select
-                  value={pokemonsPerPage.toString()}
-                  onValueChange={(value) => {
-                    window.scrollTo(0, 0);
-                    setPage(1);
-                    setPageOffset(0);
-                    setPokemonsPerPage(Number(value));
-                  }}
-                >
-                  <SelectTrigger className="w-[85px]">
+            <div className="flex flex-wrap gap-x-4 gap-y-6 max-md:justify-center md:items-center">
+              {/* select pokemon type */}
+              <Select
+                value={pokemonType}
+                onValueChange={(value) => {
+                  window.scrollTo(0, 0);
+                  setPage(1);
+                  setPageOffset(0);
+                  setPokemonType(value);
+                }}
+              >
+                <SelectTrigger className="w-[133px]">
+                  <div className="flex h-[32px] w-[90px] items-center justify-center rounded-[4px] bg-background text-lg font-medium capitalize">
                     <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {perPageValues.map((value) => (
-                        <SelectItem key={value} value={value.toString()}>
-                          {value}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : null}
-          </React.Fragment>
-        )}
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {uniqueTypes.map((value) => (
+                      <SelectItem
+                        key={value}
+                        value={value.toString()}
+                        className="capitalize"
+                      >
+                        {value}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              {/* select pokemons per page */}
+              <Select
+                value={pokemonsPerPage.toString()}
+                onValueChange={(value) => {
+                  window.scrollTo(0, 0);
+                  setPage(1);
+                  setPageOffset(0);
+                  setPokemonsPerPage(Number(value));
+                }}
+              >
+                <SelectTrigger className="w-[85px]">
+                  <div className="flex h-[32px] w-[43px] items-center justify-center rounded-[4px] bg-background text-lg font-medium">
+                    <SelectValue />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {perPageValues.map((value) => (
+                      <SelectItem
+                        key={value}
+                        value={value.toString()}
+                        className="justify-center"
+                      >
+                        {value}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        ) : null}
       </div>
     </main>
   );

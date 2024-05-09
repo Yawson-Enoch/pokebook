@@ -47,7 +47,7 @@ const pokemonTypeEmojis = {
   dark: '🌑',
   steel: '⚙️',
   fairy: '🧚‍♀️',
-  shadow: '🔦',
+  fighting: '🥊',
 };
 function getPokemonTypeEmoji(type: string) {
   return pokemonTypeEmojis[type as keyof typeof pokemonTypeEmojis] || '❔';
