@@ -2,10 +2,7 @@ import * as React from 'react';
 import ColorThief from 'colorthief';
 
 import { cn } from '@/lib/utils';
-import {
-  PokemonsDetails,
-  useGetPokemonsDetails,
-} from '@/hooks/api/use-pokemon';
+import { PokemonDetails, useGetPokemonsDetails } from '@/hooks/api/use-pokemon';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
@@ -71,32 +68,32 @@ function getDominantColor(imageUrl: string, callback: CallbackFunction): void {
   }
 }
 
-export default function PokemonCard({ pokemon }: { pokemon: PokemonsDetails }) {
+export default function PokemonCard(props: PokemonDetails) {
   const [rgb, setRgb] = React.useState<number[]>([]);
 
   const pokemonsDetails = useGetPokemonsDetails();
   const pokemonsDetailsData = pokemonsDetails.map(
-    (pokemon) => pokemon.data as PokemonsDetails,
+    (pokemonDetails) => pokemonDetails.data as PokemonDetails,
   );
 
   const similarPokemons = pokemonsDetailsData
     .filter((pokemonDetails) => {
       /* check if it has the same number of types */
-      if (pokemonDetails.types.length !== pokemon.types.length) return false;
+      if (pokemonDetails.types.length !== props.types.length) return false;
 
       /* check if all the types are the same */
-      return pokemon.types.every(
+      return props.types.every(
         (type, index) =>
           type.type.name === pokemonDetails.types[index].type.name,
       );
     })
-    .filter((similarPokemon) => similarPokemon.id !== pokemon.id); // remove the current pokemon from the list
+    .filter((similarPokemon) => similarPokemon.id !== props.id); // remove the current pokemon from the list
 
   React.useEffect(() => {
-    getDominantColor(pokemon.sprites.other.dream_world.front_default, (color) =>
+    getDominantColor(props.sprites.other.dream_world.front_default, (color) =>
       setRgb(color),
     );
-  }, [pokemon.sprites.other.dream_world.front_default]);
+  }, [props.sprites.other.dream_world.front_default]);
 
   return (
     <Drawer direction="right">
@@ -108,16 +105,16 @@ export default function PokemonCard({ pokemon }: { pokemon: PokemonsDetails }) {
               <div className="flex h-[125.8px] w-full items-center justify-center rounded-[15px] bg-[#F1F1F1] px-2.5 md:h-[148px]">
                 <img
                   className="relative -top-12 h-[162.35px] w-[161.09px] object-contain md:h-[191px] md:w-[189.9px]"
-                  src={pokemon.sprites.other.dream_world.front_default}
-                  alt={pokemon.name}
+                  src={props.sprites.other.dream_world.front_default}
+                  alt={props.name}
                 />
               </div>
             </div>
             {/* title */}
-            <p className="px-2.5 text-2xl font-medium">{pokemon.name}</p>
+            <p className="px-2.5 text-2xl font-medium">{props.name}</p>
             {/* types */}
             <ul className="relative z-20 flex w-full items-center justify-center gap-x-2.5 bg-background px-2.5">
-              {pokemon.types.map((type) => (
+              {props.types.map((type) => (
                 <li
                   key={type.type.name}
                   className="flex items-center justify-center gap-x-1 rounded-full bg-[#EEEEEE] px-[12px] py-[4px] font-sans capitalize"
@@ -129,8 +126,8 @@ export default function PokemonCard({ pokemon }: { pokemon: PokemonsDetails }) {
             </ul>
           </div>
 
-          <div className="absolute inset-x-0 z-10 flex h-[40px] w-full -translate-y-3 cursor-pointer items-end rounded-b-[20px] bg-background px-2.5 pb-2.5 shadow-[0_4px_40px_0_hsl(0_0%_0%_/_.06)] transition-[height] duration-300 ease-in-out group-hover:h-[90px]">
-            <Button className="relative hidden w-full justify-between px-[20px] py-[12px] group-hover:flex">
+          <div className="absolute inset-x-0 z-10 flex h-[40px] w-full -translate-y-3 cursor-pointer items-end rounded-b-[20px] bg-background px-2.5 pb-2.5 shadow-[0_4px_40px_0_hsl(0_0%_0%_/_.06)] transition-[height] duration-300 ease-in-out md:group-hover:h-[90px]">
+            <Button className="relative hidden w-full justify-between px-[20px] py-[12px] md:group-hover:flex">
               <span>View Pokemon</span>
               <Icons.EyeIcon />
             </Button>
@@ -158,19 +155,19 @@ export default function PokemonCard({ pokemon }: { pokemon: PokemonsDetails }) {
             </DrawerClose>
             <img
               className="relative -bottom-16 h-[162.35px] w-[161.09px] object-contain md:h-[319px] md:w-[312px]"
-              src={pokemon.sprites.other.dream_world.front_default}
-              alt={pokemon.name}
+              src={props.sprites.other.dream_world.front_default}
+              alt={props.name}
             />
           </div>
           {/* title and types */}
           <div className="mt-20 grid justify-items-center gap-y-3 pb-10">
             {/* title */}
             <p className="text-4xl font-semibold capitalize md:text-5xl">
-              {pokemon.name}
+              {props.name}
             </p>
             {/* types */}
             <ul className="flex items-center justify-center gap-x-2.5">
-              {pokemon.types.map((type) => (
+              {props.types.map((type) => (
                 <li
                   key={type.type.name}
                   className="flex items-center justify-center gap-x-1 rounded-full bg-[#EEEEEE] px-[12px] py-[4px] font-sans capitalize"
@@ -198,25 +195,21 @@ export default function PokemonCard({ pokemon }: { pokemon: PokemonsDetails }) {
               >
                 <div className="grid grid-cols-2 gap-x-6 py-2 text-lg md:gap-x-10 md:text-xl">
                   <p className="justify-self-end">Height</p>
-                  <p className="font-semibold">
-                    {adjustValue(pokemon.height)}m
-                  </p>
+                  <p className="font-semibold">{adjustValue(props.height)}m</p>
                 </div>
                 <Separator className="w-1/2" />
                 <div className="grid grid-cols-2 gap-x-6 py-2 text-lg md:gap-x-10 md:text-xl">
                   <p className="justify-self-end">Weight</p>
-                  <p className="font-semibold">
-                    {adjustValue(pokemon.weight)}kg
-                  </p>
+                  <p className="font-semibold">{adjustValue(props.weight)}kg</p>
                 </div>
                 <Separator className="w-1/2" />
                 <div className="grid grid-cols-2 gap-x-6 py-2 text-lg md:gap-x-10 md:text-xl">
                   <p className="justify-self-end">Abilities</p>
                   <ul className="list-inside list-disc font-semibold">
-                    {pokemon.abilities.map((ability, index) => (
+                    {props.abilities.map((ability, index) => (
                       <li key={ability.ability.name} className="truncate">
                         {ability.ability.name.split('-').join(' ')}
-                        {index === pokemon.abilities.length - 1 ? '' : ','}
+                        {index === props.abilities.length - 1 ? '' : ','}
                       </li>
                     ))}
                   </ul>
@@ -237,7 +230,7 @@ export default function PokemonCard({ pokemon }: { pokemon: PokemonsDetails }) {
                     'linear-gradient(270deg, #FFFFFF 0%, hsla(0, 0%, 85%, 0.35) 51.04%, #FFFFFF 100%)',
                 }}
               >
-                {pokemon.stats.map((stat, index) => (
+                {props.stats.map((stat, index) => (
                   <React.Fragment key={stat.stat.name}>
                     <div className="grid grid-cols-[1fr_120px_36px] items-center gap-x-6 py-2 text-lg md:grid-cols-[1fr_189px_36px] md:gap-x-10 md:text-xl">
                       <p
@@ -251,7 +244,7 @@ export default function PokemonCard({ pokemon }: { pokemon: PokemonsDetails }) {
                       <Progress value={stat.base_stat} />
                       <p className="font-semibold">{stat.base_stat}</p>
                     </div>
-                    {index !== pokemon.stats.length - 1 ? (
+                    {index !== props.stats.length - 1 ? (
                       <Separator className="w-2/3" />
                     ) : null}
                   </React.Fragment>

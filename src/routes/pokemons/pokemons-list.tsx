@@ -6,7 +6,7 @@ import {
 import ReactPaginate from 'react-paginate';
 
 import {
-  PokemonsDetails,
+  PokemonDetails,
   useGetPokemons,
   useGetPokemonsDetails,
 } from '@/hooks/api/use-pokemon';
@@ -31,12 +31,12 @@ export default function PokemonsList() {
   const { data: pokemonsUrls } = useGetPokemons();
   const pokemonsDetails = useGetPokemonsDetails();
 
-  /* check if some query has errored out or is loading */
-  const isPokemonsDetailsComplete = pokemonsDetails.some(
+  /* check if some query is loading or has errored out */
+  const isPokemonDetailsLoadingOrError = pokemonsDetails.some(
     (query) => query.data === undefined,
   );
 
-  if (!pokemonsUrls || isPokemonsDetailsComplete) {
+  if (!pokemonsUrls || isPokemonDetailsLoadingOrError) {
     return (
       <main>
         <div className="container grid h-full max-w-[1300px] gap-y-24 py-8 pb-16 md:py-12 md:pb-24">
@@ -53,7 +53,7 @@ export default function PokemonsList() {
   - running after `useGetPokemons` and all the queries for `useGetPokemonsDetails` are successful ensures that all the data is available 
   */
   const pokemonsDetailsData = pokemonsDetails.map(
-    (pokemon) => pokemon.data as PokemonsDetails,
+    (pokemon) => pokemon.data as PokemonDetails,
   );
 
   /* get unique types from all the fetched pokemons */
@@ -107,7 +107,7 @@ export default function PokemonsList() {
         {/* list of pokemons */}
         <ul className="grid grid-cols-[repeat(auto-fill,_minmax(min(288px,_100%),_1fr))] gap-x-4 gap-y-28">
           {currentPokemons.map((currentPokemon) => (
-            <PokemonCard key={currentPokemon.id} pokemon={currentPokemon} />
+            <PokemonCard key={currentPokemon.id} {...currentPokemon} />
           ))}
         </ul>
         {/* pagination elements */}

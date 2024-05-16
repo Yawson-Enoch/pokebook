@@ -4,6 +4,7 @@ import { z } from 'zod';
 /* --SCHEMAS--
 zod schema to strip out unnecessary fields and get types from api - 
 - eg: only the `results` field is really needed for the fetched pokemons data
+- nb: it fetches all the data, transformation is done after fetch
 - use `https://transform.tools/json-to-zod` to convert json to zod
 */
 const Pokemons = z.object({
@@ -11,7 +12,7 @@ const Pokemons = z.object({
 });
 type Pokemons = z.infer<typeof Pokemons>;
 
-const PokemonsDetails = z.object({
+const PokemonDetails = z.object({
   abilities: z.array(
     z.object({
       ability: z.object({ name: z.string(), url: z.string() }),
@@ -40,20 +41,22 @@ const PokemonsDetails = z.object({
   ),
   weight: z.number(),
 });
-export type PokemonsDetails = z.infer<typeof PokemonsDetails>;
+export type PokemonDetails = z.infer<typeof PokemonDetails>;
 
 /* --FETCHER FUNCTIONS-- */
 export const getPokemons = async () => {
   const response = await fetch(
     'https://pokeapi.co/api/v2/pokemon?limit=500&offset=0',
   );
+  /* handle server errors as fetch only throws/rejects on network errors */
   if (!response.ok) {
     throw new Error('Failed to fetch pokemons');
   }
 
   const data = await response.json();
-  const result = Pokemons.safeParse(data);
 
+  /* parse data with zod schema and throw if there is a mismatch */
+  const result = Pokemons.safeParse(data);
   if (!result.success) {
     throw new Error('Failed to parse data');
   }
@@ -62,13 +65,15 @@ export const getPokemons = async () => {
 
 const getPokemonsDetails = async (url: string) => {
   const response = await fetch(url);
+  /* handle server errors as fetch only throws/rejects on network errors */
   if (!response.ok) {
     throw new Error('Failed to fetch pokemon details');
   }
 
   const data = await response.json();
-  const result = PokemonsDetails.safeParse(data);
 
+  /* parse data with zod schema and throw if there is a mismatch */
+  const result = PokemonDetails.safeParse(data);
   if (!result.success) {
     throw new Error('Failed to parse data');
   }
@@ -103,7 +108,7 @@ export function useGetPokemonsDetails() {
     queries: pokemonsUrls
       ? pokemonsUrls.map((url) => {
           return {
-            queryKey: ['pokemons', url],
+            queryKey: ['pokemon', url],
             queryFn: () => getPokemonsDetails(url),
             staleTime: Infinity,
           };
