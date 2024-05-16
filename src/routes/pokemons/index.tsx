@@ -11,12 +11,7 @@ export default function Pokemons() {
       <Helmet>
         <title>Pokemons | Pokebook</title>
       </Helmet>
-      <header
-        className="bg-cover bg-fixed bg-center bg-no-repeat shadow-[0_14px_24px_0_hsl(0_0%_0%_/_.05)]"
-        style={{
-          backgroundImage: `linear-gradient(hsl(0 0% 100% / .97), hsl(0 0% 100% / .97)), url('/assets/images/noise.webp')`,
-        }}
-      >
+      <header className="bg-white/40 shadow-[0_14px_24px_0_hsl(0_0%_0%_/_.05)]">
         <div className="container flex h-full items-center justify-between gap-x-5 md:gap-x-8">
           {/* logo */}
           <Link to={'/'} className="flex items-center gap-x-3">
