@@ -2,6 +2,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   DotsHorizontalIcon,
+  ExclamationTriangleIcon,
+  InfoCircledIcon,
 } from '@radix-ui/react-icons';
 import ReactPaginate from 'react-paginate';
 
@@ -28,22 +30,36 @@ export default function PokemonsList() {
   /* manage state with query params - make filter sharable and maintain filter state on page refresh */
   const [filter, setFilter] = useFilter();
 
-  const { data: pokemonsUrls } = useGetPokemons();
+  const { isPending, isError } = useGetPokemons();
   const pokemonsDetails = useGetPokemonsDetails();
 
-  /* check if some query is loading or has errored out */
-  const isPokemonDetailsLoadingOrError = pokemonsDetails.some(
-    (query) => query.data === undefined,
+  /* check if some query of `useGetPokemonsDetails` is loading  */
+  const isPokemonDetailsPending = pokemonsDetails.some(
+    (query) => query.isPending,
   );
+  /* check if some query `useGetPokemonsDetails` has errored out  */
+  const isPokemonDetailsError = pokemonsDetails.some((query) => query.isError);
 
-  if (!pokemonsUrls || isPokemonDetailsLoadingOrError) {
+  if (isPending || isPokemonDetailsPending) {
     return (
-      <main>
-        <div className="container grid h-full max-w-[1300px] gap-y-24 py-8 pb-16 md:py-12 md:pb-24">
-          <p className="text-center font-sans text-xl font-medium md:text-2xl">
-            Loading pokemons...
-          </p>
-        </div>
+      <main className="container max-w-[1300px] py-8 pb-16 text-center md:py-12 md:pb-24">
+        <div className="mx-auto size-16 animate-spin rounded-full border-4 border-dashed border-accent" />
+        <p className="mt-3 text-center font-sans text-xl font-medium md:text-2xl">
+          Loading...
+        </p>
+        <p>Your Pokémon adventure is about to begin.</p>
+      </main>
+    );
+  }
+
+  if (isError || isPokemonDetailsError) {
+    return (
+      <main className="container max-w-[1300px] py-8 pb-16 text-center md:py-12 md:pb-24">
+        <ExclamationTriangleIcon className="mx-auto size-16 text-red-500" />
+        <p className="mt-3 text-center font-sans text-xl font-medium md:text-2xl">
+          Failed to load!
+        </p>
+        <p>Please check your internet connection and try again.</p>
       </main>
     );
   }
@@ -91,12 +107,12 @@ export default function PokemonsList() {
 
   if (pageCount === 0) {
     return (
-      <main>
-        <div className="container grid h-full max-w-[1300px] gap-y-24 py-8 pb-16 md:py-12 md:pb-24">
-          <p className="text-center font-sans font-medium md:text-lg">
-            Oops! No matches. Adjust your filters or modify your search query.
-          </p>
-        </div>
+      <main className="container max-w-[1300px] py-8 pb-16 text-center md:py-12 md:pb-24">
+        <InfoCircledIcon className="mx-auto size-16" />
+        <p className="mt-3 text-center font-sans text-xl font-medium md:text-2xl">
+          Oops! No matches.
+        </p>
+        <p>Adjust your filters or modify your search query.</p>
       </main>
     );
   }
