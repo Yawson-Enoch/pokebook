@@ -1,8 +1,12 @@
-import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { getPokemons, pokemonsQueryKey } from '@/hooks/api/use-pokemon';
+import {
+  getPokemonDetails,
+  getPokemons,
+  pokemonDetailsQueryKey,
+  pokemonsQueryKey,
+} from '@/hooks/api/use-pokemon';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/common/icons';
 
@@ -10,16 +14,27 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   /* prefetch pokemons 
-  - this starts the fetching of the pokemons on the home page and stores it in the cache
+  - this starts the fetching of the pokemons urls and pokemons details on the home page and stores it in the cache store
   - `/pokemons` page uses the cached data if it finishes. Else it continues the fetch
+  - ref: https://tanstack.com/query/latest/docs/framework/react/guides/prefetching
   */
-  React.useEffect(() => {
-    queryClient.prefetchQuery({
-      queryKey: pokemonsQueryKey,
-      queryFn: getPokemons,
-      staleTime: Infinity,
-    });
-  }, [queryClient]);
+  useQuery({
+    queryKey: pokemonsQueryKey,
+    queryFn: async () => {
+      const pokemons = await getPokemons();
+
+      for (const pokemon of pokemons.results) {
+        queryClient.prefetchQuery({
+          queryKey: pokemonDetailsQueryKey(pokemon.url),
+          queryFn: () => getPokemonDetails(pokemon.url),
+        });
+      }
+
+      return pokemons;
+    },
+    select: (pokemons) => pokemons.results.map((pokemon) => pokemon.url),
+    notifyOnChangeProps: [],
+  });
 
   const navigate = useNavigate();
 

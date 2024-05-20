@@ -63,7 +63,7 @@ export const getPokemons = async () => {
   return result.data;
 };
 
-const getPokemonsDetails = async (url: string) => {
+export const getPokemonDetails = async (url: string) => {
   const response = await fetch(url);
   /* handle server errors as fetch only throws/rejects on network errors */
   if (!response.ok) {
@@ -82,6 +82,7 @@ const getPokemonsDetails = async (url: string) => {
 
 /* --QUERY KEYS-- */
 export const pokemonsQueryKey = ['pokemons'];
+export const pokemonDetailsQueryKey = (url: string) => ['pokemon', url];
 
 /* --QUERY HOOKS-- */
 /* fetch pokemons 
@@ -92,7 +93,6 @@ export function useGetPokemons() {
     queryKey: pokemonsQueryKey,
     queryFn: getPokemons,
     select: (pokemons) => pokemons.results.map((pokemon) => pokemon.url),
-    staleTime: Infinity,
   });
 }
 
@@ -108,9 +108,8 @@ export function useGetPokemonsDetails() {
     queries: pokemonsUrls
       ? pokemonsUrls.map((url) => {
           return {
-            queryKey: ['pokemon', url],
-            queryFn: () => getPokemonsDetails(url),
-            staleTime: Infinity,
+            queryKey: pokemonDetailsQueryKey(url),
+            queryFn: () => getPokemonDetails(url),
           };
         })
       : [],

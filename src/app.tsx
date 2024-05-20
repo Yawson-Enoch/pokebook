@@ -1,12 +1,35 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { RouterProvider } from 'react-router-dom';
 
 import { AccentProvider } from './context/accent-provider';
 import { router } from './routes';
 
-const queryClient = new QueryClient();
+const TIME_TO_REMAIN_IN_CACHE_STORE = 1000 * 60 * 60 * 24 * 7; // 7days
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      /* set to the default maxAge on the `persistQueryClient which is 24 hours` 
+      - stored cache will be discarded after 24 hours
+      - gcTime` should be same or higher than the maxAge set on `persistQueryClient`
+      */
+      gcTime: TIME_TO_REMAIN_IN_CACHE_STORE,
+      /* so all queries stay fresh
+      - not necessary as it will not refetch as there will be data in the cache store 
+      - just serves as a good fallback
+       */
+      staleTime: Infinity,
+    },
+  },
+});
+
+export const localStoragePersister = createSyncStoragePersister({
+  storage: window.localStorage,
+});
 
 export default function App() {
   return (
@@ -14,12 +37,18 @@ export default function App() {
       <Helmet>
         <title>Pokebook</title>
       </Helmet>
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{
+          persister: localStoragePersister,
+          maxAge: TIME_TO_REMAIN_IN_CACHE_STORE,
+        }}
+      >
         <AccentProvider>
           <RouterProvider router={router} />
           <ReactQueryDevtools initialIsOpen={false} />
         </AccentProvider>
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </HelmetProvider>
   );
 }
