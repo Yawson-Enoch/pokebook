@@ -49,7 +49,7 @@ export default function Home() {
             navigate(
               searchValue.trim() === ''
                 ? '/pokemons'
-                : `/pokemons?s=${searchValue}`,
+                : `/pokemons?q=${searchValue}`,
             );
           }}
         >

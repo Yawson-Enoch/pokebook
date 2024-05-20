@@ -90,7 +90,7 @@ export default function PokemonsList() {
     - only filtering by `name` here
   */
   const pokemonsBySearch = pokemonsByType.filter((pokemon) =>
-    pokemon.name.toLowerCase().includes(filter.s.toLowerCase()),
+    pokemon.name.toLowerCase().includes(filter.q.trim().toLowerCase()),
   );
 
   /* pokemons data pagination */
