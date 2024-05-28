@@ -16,6 +16,7 @@ const queryClient = new QueryClient({
       /* set to the default maxAge on the `persistQueryClient which is 24 hours` 
       - stored cache will be discarded after 24 hours
       - gcTime` should be same or higher than the maxAge set on `persistQueryClient`
+      - the maximum allowed gcTime is about 24 days __ check "How It Works" section of https://tanstack.com/query/latest/docs/framework/react/plugins/persistQueryClient#persistqueryclientsave
       */
       gcTime: TIME_TO_REMAIN_IN_CACHE_STORE,
       /* so all queries stay fresh
