@@ -7,11 +7,7 @@ import {
 } from '@radix-ui/react-icons';
 import ReactPaginate from 'react-paginate';
 
-import {
-  PokemonDetails,
-  useGetPokemons,
-  useGetPokemonsDetails,
-} from '@/hooks/api/use-pokemon';
+import { useGetPokemons, useGetPokemonsDetails } from '@/hooks/api/use-pokemon';
 import { useFilter } from '@/hooks/use-query-state';
 import {
   Select,
@@ -68,9 +64,7 @@ export default function PokemonsList() {
   - returns an empty array if `useGetPokemons` data in undefined
   - running after `useGetPokemons` and all the queries for `useGetPokemonsDetails` are successful ensures that all the data is available 
   */
-  const pokemonsDetailsData = pokemonsDetails.map(
-    (pokemon) => pokemon.data as PokemonDetails,
-  );
+  const pokemonsDetailsData = pokemonsDetails.map((pokemon) => pokemon.data!);
 
   /* get unique types from all the fetched pokemons */
   const allTypes = pokemonsDetailsData.flatMap((pokemon) =>

@@ -100,6 +100,7 @@ export function useGetPokemons() {
   - this is to get the details for each pokemon 
   - fetches details for each pokemon using the urls from `useGetPokemons`
   - returns an array of all the queries
+  - could fetch the 500 pokemons without depending on the `useGetPokemons`, but fetching the pokemons first ensures that the pokemons are actually available from the api __ could go with something like [1,...,500] and map to fetch without depending on `useGetPokemons`, but what if id like say 9 is not available from the endpoint...? we will end up with 499 instead of 500
 */
 export function useGetPokemonsDetails() {
   const { data: pokemonsUrls } = useGetPokemons();

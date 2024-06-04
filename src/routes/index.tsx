@@ -14,7 +14,12 @@ export const router = createBrowserRouter([
     - reference: https://github.com/pbeshai/use-query-params/issues/271
     */
     element: (
-      <QueryParamProvider adapter={ReactRouter6Adapter}>
+      <QueryParamProvider
+        adapter={ReactRouter6Adapter}
+        options={{
+          removeDefaultsFromUrl: true,
+        }}
+      >
         <Outlet />
       </QueryParamProvider>
     ),

@@ -18,11 +18,14 @@ export default function Search() {
         className="w-full rounded-full bg-transparent px-2 font-sans caret-accent outline-none placeholder:text-[#7B7B7B] md:px-3 md:text-lg"
         value={filter.q}
         onChange={(e) => {
-          setFilter({
-            q: e.target.value,
-            page: undefined,
-            pageOffset: undefined,
-          });
+          setFilter(
+            {
+              q: e.target.value,
+              page: undefined,
+              pageOffset: undefined,
+            },
+            'replaceIn',
+          );
         }}
       />
       <button
@@ -32,7 +35,10 @@ export default function Search() {
           filter.q !== '' && 'pointer-events-auto visible',
         )}
         onClick={() => {
-          setFilter({ q: undefined, page: undefined, pageOffset: undefined });
+          setFilter(
+            { q: undefined, page: undefined, pageOffset: undefined },
+            'replaceIn',
+          );
         }}
       >
         <Cross1Icon className="size-1/2" />
